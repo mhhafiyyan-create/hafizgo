@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HAFIZ.GO - Play • Learn • Murojaah</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tone.js untuk Efek Suara Interaktif Tanpa URL Eksternal -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  
+  <!-- Google Fonts: Amiri & Scheherazade New (Teks Arab) + Plus Jakarta Sans (UI Ramah Anak) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sage: {
+              50: '#F4F8F5',
+              100: '#E5EFE8',
+              200: '#CBE0D2',
+              300: '#A4C8B1',
+              400: '#78AC8B',
+              500: '#558E6B',
+              600: '#417254',
+              700: '#355B44',
+              800: '#2B4938',
+              900: '#243C2F',
+            },
+            cream: {
+              50: '#FDFCFA',
+              100: '#FAF6EE',
+              200: '#F3EBDC',
+              300: '#E7D9C0',
+            },
+            gold: {
+              300: '#F6D365',
+              400: '#EAB308',
+              500: '#D4AF37',
+              600: '#B58E22',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            arabic: ['"Scheherazade New"', '"Amiri"', 'serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Pengaturan Dasar & Tipografi Arab */
+    body {
+      background-color: #FAF6EE;
+      color: #243C2F;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .arabic-text {
+      font-family: 'Scheherazade New', 'Amiri', serif;
+      direction: rtl;
+      unicode-bidi: isolate;
+      line-height: 2.1;
+      letter-spacing: 0;
+    }
+
+    /* Pola Islami Geometris Sangat Halus di Latar Belakang */
+    .islamic-pattern {
+      background-image: radial-gradient(#558E6B 0.75px, transparent 0.75px), radial-gradient(#D4AF37 0.75px, #FAF6EE 0.75px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      background-color: #FAF6EE;
+    }
+
+    /* Animasi Halus & Interaktif */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    .animate-float {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.82); opacity: 0; }
+      70% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes shakeGentle {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+    .animate-shake {
+      animation: shakeGentle 0.45s ease-in-out;
+    }
+
+    @keyframes starBurst {
+      0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+      60% { transform: scale(1.25) rotate(10deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .animate-star {
+      animation: starBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* Kartu Potongan Ayat */
+    .word-tile {
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 4px 0 #CBE0D2;
+    }
+    .word-tile:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #A4C8B1;
+    }
+    .word-tile:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #CBE0D2;
+    }
+
+    .answer-tile {
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 #B58E22;
+    }
+
+    /* Custom Scrollbar Lembut */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF6EE;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #A4C8B1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #558E6B;
+    }
+  </style>
+</head>
+<body class="islamic-pattern min-h-screen flex flex-col justify-between selection:bg-sage-200 selection:text-sage-900">
+
+  <!-- ==================== NAVBAR ATAS ==================== -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-sage-200/80 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <!-- Brand / Kembali ke Beranda -->
+      <button onclick="navigateTo('home')" class="flex items-center gap-2.5 text-left group focus:outline-none">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sage-500 to-sage-700 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+          <!-- Ikon Al-Qur'an Mini -->
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z" fill="#F6D365" fill-opacity="0.25"/>
+            <path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z" fill="#F6D365" fill-opacity="0.25"/>
+            <path d="M12 6v14" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-extrabold text-sage-800 text-sm sm:text-base tracking-tight block leading-none">HAFIZ CILIK</span>
+          <span class="text-[11px] font-semibold text-gold-600 tracking-wide">JUZ 30 INTERAKTIF</span>
+        </div>
+      </button>
+
+      <!-- Info Cepat Pemain & Bintang -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Badge Nama Pemain -->
+        <div class="hidden sm:flex items-center gap-1.5 bg-sage-50 border border-sage-200 px-3 py-1.5 rounded-full text-xs font-bold text-sage-800">
+          <span>🧒</span>
+          <span id="navPlayerName">Hafiz Cilik</span>
+        </div>
+
+        <!-- Badge Total Bintang -->
+        <button onclick="navigateTo('dashboard')" title="Lihat Dashboard Hasil Belajar" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold text-amber-700 transition">
+          <span class="text-base">⭐</span>
+          <span id="navTotalStars">0</span>
+        </button>
+
+        <!-- Tombol Suara Efek Game -->
+        <button id="soundToggleBtn" onclick="toggleSoundEffects()" title="Suara Efek Game" class="w-10 h-10 rounded-full bg-sage-50 hover:bg-sage-100 border border-sage-200 flex items-center justify-center text-sage-700 transition">
+          <span id="soundIcon">🔊</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== AREA KONTEN UTAMA ==================== -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 sm:py-8">
+
+    <!-- ========================================================= -->
+    <!-- 1. HALAMAN UTAMA (HOME)                                   -->
+    <!-- ========================================================= -->
+    <section id="view-home" class="view-section animate-pop">
+      <div class="bg-white rounded-3xl border-2 border-sage-200/80 shadow-xl shadow-sage-900/5 p-6 sm:p-10 text-center relative overflow-hidden">
+        <!-- Dekorasi Sudut Halus -->
+        <div class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-sage-100/60 pointer-events-none"></div>
+        <div class="absolute -bottom-12 -left-12 w-40 h-40 rounded-full bg-amber-100/50 pointer-events-none"></div>
+
+        <!-- Ilustrasi Maskot Hafiz Cilik & Al-Qur'an -->
+        <div class="relative mx-auto w-36 h-36 sm:w-44 sm:h-44 mb-4 animate-float">
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
+            <!-- Lingkaran Cahaya Belakang -->
+            <circle cx="100" cy="100" r="88" fill="#E5EFE8" />
+            <circle cx="100" cy="100" r="76" fill="#FAF6EE" stroke="#D4AF37" stroke-width="2.5" stroke-dasharray="6 4" />
+            <!-- Bintang-bintang Kecil -->
+            <path d="M36 52 L39 58 L45 59 L40 63 L41 69 L36 66 L31 69 L32 63 L27 59 L33 58 Z" fill="#EAB308" />
+            <path d="M164 48 L166 53 L171 54 L167 57 L168 62 L164 59 L160 62 L161 57 L157 54 L162 53 Z" fill="#EAB308" />
+            <!-- Badan / Baju Koko Sage -->
+            <path d="M58 168 C58 136, 142 136, 142 168 Z" fill="#558E6B" />
+            <path d="M92 138 L100 156 L108 138" fill="#FAF6EE" />
+            <!-- Kepala Anak -->
+            <circle cx="100" cy="96" r="34" fill="#FCD5B5" />
+            <!-- Peci Putih & Aksen Emas -->
+            <path d="M67 84 C67 58, 133 58, 133 84 Z" fill="#FFFFFF" stroke="#CBE0D2" stroke-width="2" />
+            <rect x="67" y="79" width="66" height="6" rx="3" fill="#D4AF37" />
+            <!-- Mata & Senyum Ramah -->
+            <circle cx="88" cy="96" r="3.5" fill="#243C2F" />
+            <circle cx="112" cy="96" r="3.5" fill="#243C2F" />
+            <circle cx="89" cy="95" r="1.2" fill="#FFFFFF" />
+            <circle cx="113" cy="95" r="1.2" fill="#FFFFFF" />
+            <path d="M91 108 Q100 116 109 108" fill="none" stroke="#243C2F" stroke-width="2.8" stroke-linecap="round" />
+            <circle cx="80" cy="103" r="4" fill="#F8A5A5" opacity="0.5" />
+            <circle cx="120" cy="103" r="4" fill="#F8A5A5" opacity="0.5" />
+            <!-- Rehal & Mushaf Al-Qur'an Terbuka -->
+            <path d="M55 154 L100 162 L145 154 L138 176 L100 182 L62 176 Z" fill="#B58E22" />
+            <path d="M58 148 Q79 142 100 152 Q121 142 142 148 L138 170 Q119 162 100 171 Q81 162 62 170 Z" fill="#FFFFFF" stroke="#558E6B" stroke-width="2" />
+            <line x1="100" y1="152" x2="100" y2="171" stroke="#D4AF37" stroke-width="2" />
+            <!-- Garis Ayat Mini di Mushaf -->
+            <line x1="68" y1="155" x2="92" y2="157" stroke="#A4C8B1" stroke-width="2" stroke-linecap="round" />
+            <line x1="70" y1="161" x2="90" y2="163" stroke="#A4C8B1" stroke-width="2" stroke-linecap="round" />
+            <line x1="108" y1="157" x2="132" y2="155" stroke="#A4C8B1" stroke-width="2" stroke-linecap="round" />
+            <line x1="110" y1="163" x2="130" y2="161" stroke="#A4C8B1" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <!-- Judul & Subjudul -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sage-100 text-sage-800 text-xs sm:text-sm font-bold mb-3">
+          <span>✨</span>
+          <span>Assalamu'alaikum, Selamat Datang!</span>
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black text-sage-800 tracking-tight mb-2 drop-shadow-[0_4px_4px_rgba(36,60,47,0.22)]">
+          Hafiz<span class="text-gold-500">.Go</span>
+        </h1>
+        <p class="text-base sm:text-xl font-medium text-sage-600 mb-6">
+          Play • Learn • Murojaah
+        </p>
+
+        <!-- Input Nama Pemain -->
+        <div class="max-w-md mx-auto mb-6 bg-cream-100 p-4 rounded-2xl border border-sage-200">
+          <label for="playerNameInput" class="block text-xs font-bold uppercase tracking-wider text-sage-700 mb-2">
+            Nama Hafiz / Hafizah Cilik:
+          </label>
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="playerNameInput"
+              maxlength="24"
+              placeholder="Tulis namamu di sini..."
+              class="w-full px-4 py-3 rounded-xl bg-white border-2 border-sage-200 focus:border-sage-500 focus:outline-none text-sage-900 font-bold text-center text-base sm:text-lg"
+            />
+            <button
+              onclick="savePlayerName()"
+              class="px-4 py-3 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold text-sm transition shrink-0 shadow-sm"
+            >
+              Simpan
+            </button>
+          </div>
+          <p id="nameSavedFeedback" class="text-xs text-sage-600 font-semibold mt-1.5 hidden">
+            ✅ Nama berhasil disimpan!
+          </p>
+        </div>
+
+        <!-- Ringkasan Progres & Total Bintang -->
+        <div class="max-w-xl mx-auto grid grid-cols-2 gap-3 sm:gap-4 mb-8">
+          <div class="bg-sage-50 border border-sage-200 rounded-2xl p-4 text-left">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-bold text-sage-600">PROGRES JUZ 30</span>
+              <span id="homeProgressText" class="text-xs font-extrabold text-sage-800">0 / 37 Surat</span>
+            </div>
+            <div class="w-full h-3 bg-sage-200 rounded-full overflow-hidden">
+              <div id="homeProgressBar" class="h-full bg-gradient-to-r from-sage-500 to-sage-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p class="text-[11px] text-sage-600 mt-1.5 font-medium" id="homeProgressPercent">0% Selesai</p>
+          </div>
+
+          <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 flex items-center gap-3 text-left">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-2xl shrink-0">
+              🌟
+            </div>
+            <div>
+              <span class="text-xs font-bold text-amber-700 block">TOTAL BINTANG</span>
+              <span id="homeTotalStars" class="text-2xl font-extrabold text-amber-800">0</span>
+              <span class="text-xs text-amber-700 font-semibold"> Bintang</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tombol Menu Utama (Besar & Ramah Anak) -->
+        <div class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <button
+            onclick="navigateTo('surah-list')"
+            class="sm:col-span-2 py-4 px-6 rounded-2xl bg-gradient-to-r from-sage-600 to-sage-500 hover:from-sage-700 hover:to-sage-600 text-white font-extrabold text-lg sm:text-xl shadow-lg shadow-sage-600/25 flex items-center justify-center gap-3 transform hover:-translate-y-0.5 transition cursor-pointer"
+          >
+            <span class="text-2xl">🎮</span>
+            <span>MULAI BERMAIN</span>
+          </button>
+
+          <button
+            onclick="navigateTo('murojaah')"
+            class="py-4 px-5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-base sm:text-lg shadow-md shadow-amber-500/20 flex items-center justify-center gap-2.5 transform hover:-translate-y-0.5 transition cursor-pointer"
+          >
+            <span class="text-xl">🎧</span>
+            <span>MODE MUROJAAH</span>
+          </button>
+
+          <button
+            onclick="navigateTo('dashboard')"
+            class="py-4 px-5 rounded-2xl bg-white hover:bg-sage-50 text-sage-800 border-2 border-sage-300 font-extrabold text-base sm:text-lg flex items-center justify-center gap-2.5 transform hover:-translate-y-0.5 transition cursor-pointer"
+          >
+            <span class="text-xl">🏆</span>
+            <span>HASIL BELAJAR</span>
+          </button>
+
+          <button
+            onclick="navigateTo('guide')"
+            class="sm:col-span-2 py-3.5 px-5 rounded-2xl bg-cream-100 hover:bg-cream-200 text-sage-700 border border-sage-200 font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition cursor-pointer"
+          >
+            <span>📖</span>
+            <span>PANDUAN BERMAIN</span>
+          </button>
+        </div>
+
+        <p class="mt-6 text-xs sm:text-sm font-medium italic text-sage-500/75 tracking-wide">
+          Karya : Hafi.Create
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 2. PILIHAN SURAT JUZ 30 (37 SURAT)                        -->
+    <!-- ========================================================= -->
+    <section id="view-surah-list" class="view-section hidden animate-pop">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-sage-600 hover:text-sage-800 mb-1">
+            <span>←</span> Kembali ke Beranda
+          </button>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-sage-900">Pilih Surat Juz 30</h2>
+          <p class="text-sm text-sage-600">Pilih salah satu dari 37 surat untuk mulai menyusun ayat!</p>
+        </div>
+
+        <!-- Pencarian & Filter Status -->
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input
+            type="text"
+            id="surahSearchInput"
+            oninput="renderSurahGrid()"
+            placeholder="Cari nama surat (mis. Al-Ikhlas)..."
+            class="px-4 py-2.5 rounded-xl bg-white border border-sage-300 focus:border-sage-600 focus:outline-none text-sm font-medium"
+          />
+          <select
+            id="surahFilterSelect"
+            onchange="renderSurahGrid()"
+            class="px-4 py-2.5 rounded-xl bg-white border border-sage-300 focus:border-sage-600 focus:outline-none text-sm font-bold text-sage-800"
+          >
+            <option value="all">Semua Surat (37)</option>
+            <option value="short">Surat Pendek (Al-'Asr - An-Nas)</option>
+            <option value="completed">Sudah Selesai</option>
+            <option value="unstarted">Belum Dimulai</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid 37 Kartu Surat -->
+      <div id="surahGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Diisi secara dinamis oleh JavaScript -->
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3. GAME UTAMA: MENYUSUN AYAT                              -->
+    <!-- ========================================================= -->
+    <section id="view-game" class="view-section hidden animate-pop">
+      <!-- Bar Atas Permainan -->
+      <div class="bg-white rounded-2xl border border-sage-200 p-4 mb-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button onclick="exitGameConfirm()" class="px-3.5 py-2 rounded-xl bg-sage-50 hover:bg-sage-100 text-sage-700 font-bold text-sm border border-sage-200 transition">
+            ← Daftar Surat
+          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="gameSurahTitle" class="text-lg sm:text-xl font-extrabold text-sage-900">Surat Al-Ikhlas</h2>
+              <span id="gameSurahArabic" class="arabic-text text-xl font-bold text-sage-600">الإخلاص</span>
+            </div>
+            <p id="gameAyahProgressText" class="text-xs sm:text-sm font-bold text-gold-600">Ayat 1 dari 4</p>
+          </div>
+        </div>
+
+        <!-- Skor, Bintang Sesi, & Timer -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="bg-sage-50 px-3 py-1.5 rounded-xl border border-sage-200 text-center">
+            <span class="text-[10px] font-bold text-sage-500 block">SKOR</span>
+            <span id="gameSessionScore" class="text-sm sm:text-base font-extrabold text-sage-800">0</span>
+          </div>
+          <div class="bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 text-center">
+            <span class="text-[10px] font-bold text-amber-600 block">BINTANG</span>
+            <span id="gameSessionStars" class="text-sm sm:text-base font-extrabold text-amber-700">⭐ 0</span>
+          </div>
+          <div class="bg-cream-100 px-3 py-1.5 rounded-xl border border-sage-200 text-center">
+            <span class="text-[10px] font-bold text-sage-500 block">WAKTU</span>
+            <span id="gameTimerDisplay" class="text-sm sm:text-base font-extrabold text-sage-800 font-mono">00:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar Ayat dalam Surat -->
+      <div class="w-full h-2.5 bg-sage-200 rounded-full overflow-hidden mb-5">
+        <div id="gameProgressBar" class="h-full bg-gradient-to-r from-sage-500 to-gold-500 transition-all duration-500" style="width: 0%"></div>
+      </div>
+
+      <!-- Loading State Saat Mengambil Data Al-Qur'an Terverifikasi -->
+      <div id="gameLoadingState" class="hidden bg-white rounded-3xl border-2 border-sage-200 p-12 text-center">
+        <div class="w-14 h-14 border-4 border-sage-200 border-t-sage-600 rounded-full animate-spin mx-auto mb-4"></div>
+        <h3 class="text-lg font-extrabold text-sage-800 mb-1">Menyiapkan Ayat Al-Qur'an...</h3>
+        <p class="text-sm text-sage-600">Memuat teks Uthmani & audio bacaan Qari yang tepercaya.</p>
+      </div>
+
+      <!-- Error State Jika Koneksi Gagal -->
+      <div id="gameErrorState" class="hidden bg-white rounded-3xl border-2 border-rose-200 p-8 text-center">
+        <div class="text-4xl mb-3">📡</div>
+        <h3 class="text-lg font-extrabold text-rose-800 mb-2">Gagal Memuat Ayat Surat</h3>
+        <p id="gameErrorMessage" class="text-sm text-sage-700 mb-5">Periksa koneksi internetmu untuk mengunduh teks dan audio Al-Qur'an.</p>
+        <button onclick="retryLoadCurrentSurah()" class="px-6 py-3 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-bold text-sm">
+          Coba Muat Ulang
+        </button>
+      </div>
+
+      <!-- Area Permainan Aktif -->
+      <div id="gameActiveContainer" class="space-y-5">
+        <!-- Instruksi & Motivasi Hafiz Cilik -->
+        <div class="bg-white rounded-3xl border-2 border-sage-200 p-5 sm:p-7 shadow-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🎯</span>
+              <div>
+                <h3 class="font-extrabold text-sage-900 text-sm sm:text-base">Target: Susun Ayat dengan Urutan yang Benar</h3>
+                <p class="text-xs text-sage-600">Klik potongan kata dari kanan ke kiri sesuai bacaan Al-Qur'an.</p>
+              </div>
+            </div>
+            <span id="gameAyahBadge" class="self-start sm:self-auto px-3.5 py-1 rounded-full bg-sage-100 text-sage-800 font-extrabold text-xs">
+              Ayat ke-1
+            </span>
+          </div>
+
+          <!-- Kotak Bantuan "Lihat Ayat" (Tersembunyi secara default) -->
+          <div id="peekAyahBox" class="hidden mb-4 p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-center animate-pop">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 block mb-1">
+              👀 Bantuan Lihat Ayat (Maksimal skor ayat ini: 80 poin)
+            </span>
+            <p id="peekAyahText" class="arabic-text text-2xl sm:text-3xl font-bold text-sage-900 py-1"></p>
+          </div>
+
+          <!-- Pemberitahuan Status Audio jika bermasalah -->
+          <div id="audioStatusBanner" class="hidden mb-4 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center justify-between">
+            <span id="audioStatusText">Audio bacaan sedang dimuat...</span>
+            <button onclick="document.getElementById('audioStatusBanner').classList.add('hidden')" class="text-rose-900 ml-2">✕</button>
+          </div>
+
+          <!-- AREA 1: SUSUNAN JAWABAN (RTL: Kanan ke Kiri) -->
+          <div class="mb-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-sage-700">
+                ✨ Susunan Jawabanmu (Kanan → Kiri):
+              </span>
+              <button
+                id="clearAnswerBtn"
+                onclick="clearCurrentAnswer()"
+                class="text-xs font-bold text-rose-600 hover:text-rose-800 px-2.5 py-1 rounded-lg hover:bg-rose-50 transition"
+              >
+                ↺ Kosongkan Susunan
+              </button>
+            </div>
+
+            <div
+              id="answerDropZone"
+              dir="rtl"
+              class="min-h-[116px] p-4 sm:p-5 rounded-2xl bg-cream-100 border-2 border-dashed border-sage-400 flex flex-wrap items-center justify-start gap-3 transition-all"
+            >
+              <!-- Placeholder saat kosong -->
+              <p id="answerPlaceholder" class="w-full text-center text-sage-500 text-sm font-medium py-4" dir="ltr">
+                Klik potongan ayat di bawah ini untuk menyusunnya di sini...
+              </p>
+            </div>
+          </div>
+
+          <!-- Umpan Balik Ramah (Benar / Salah / Petunjuk) -->
+          <div id="gameFeedbackBox" class="hidden mb-5 p-4 rounded-2xl text-center font-bold text-sm sm:text-base animate-pop"></div>
+
+          <!-- AREA 2: PILIHAN POTONGAN AYAT (DIACAK) -->
+          <div class="mb-6">
+            <span class="block text-xs font-extrabold uppercase tracking-wider text-sage-700 mb-2.5">
+              🧩 Pilih Potongan Ayat:
+            </span>
+            <div
+              id="wordChoicesPool"
+              dir="rtl"
+              class="min-h-[100px] p-4 rounded-2xl bg-sage-50/80 border border-sage-200 flex flex-wrap items-center justify-center gap-3"
+            >
+              <!-- Tombol potongan kata akan dirender di sini -->
+            </div>
+          </div>
+
+          <!-- AREA 3: 4 TOMBOL FITUR BANTUAN -->
+          <div class="pt-4 border-t border-sage-200">
+            <span class="block text-[11px] font-bold uppercase tracking-wider text-sage-500 mb-2.5 text-center sm:text-left">
+              Butuh Bantuan Belajar?
+            </span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <!-- A. Lihat Ayat -->
+              <button
+                id="btnHelpPeek"
+                onclick="useHelpPeek()"
+                class="py-3 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
+              >
+                <span>👁️</span>
+                <span>Lihat Ayat</span>
+              </button>
+
+              <!-- B. Dengarkan Ayat -->
+              <button
+                id="btnHelpListen"
+                onclick="playCurrentAyahAudio(false)"
+                class="py-3 px-3 rounded-xl bg-sage-100 hover:bg-sage-200 text-sage-800 border border-sage-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
+              >
+                <span>🔊</span>
+                <span>Dengarkan Ayat</span>
+              </button>
+
+              <!-- C. Ulangi Audio -->
+              <button
+                id="btnHelpReplay"
+                onclick="playCurrentAyahAudio(true)"
+                class="py-3 px-3 rounded-xl bg-sage-100 hover:bg-sage-200 text-sage-800 border border-sage-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
+              >
+                <span>🔁</span>
+                <span>Ulangi Audio</span>
+              </button>
+
+              <!-- D. Petunjuk (Potongan Berikutnya) -->
+              <button
+                id="btnHelpHint"
+                onclick="useHelpHint()"
+                class="py-3 px-3 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
+              >
+                <span>💡</span>
+                <span>Petunjuk</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. HALAMAN SELESAI BERMAIN (APRESIASI)                    -->
+    <!-- ========================================================= -->
+    <section id="view-complete" class="view-section hidden animate-pop">
+      <div class="max-w-2xl mx-auto bg-white rounded-3xl border-2 border-gold-400 shadow-2xl p-6 sm:p-10 text-center relative overflow-hidden">
+        <!-- Bintang Perolehan -->
+        <div id="completeStarsDisplay" class="flex items-center justify-center gap-3 text-5xl sm:text-6xl mb-4">
+          <span class="animate-star">⭐</span>
+          <span class="animate-star" style="animation-delay: 0.15s">⭐</span>
+          <span class="animate-star" style="animation-delay: 0.3s">⭐</span>
+        </div>
+
+        <div class="inline-block px-4 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs uppercase tracking-wider mb-2">
+          Alhamdulillah! Surat Selesai
+        </div>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-sage-900 mb-2">
+          MASYAALLAH, HEBAT SEKALI!
+        </h2>
+        <p id="completeSubtitle" class="text-base sm:text-lg text-sage-700 font-medium mb-6">
+          Kamu berhasil menyusun seluruh ayat Surat Al-Ikhlas.
+        </p>
+
+        <!-- Rincian Hasil Permainan -->
+        <div class="bg-cream-100 rounded-2xl border border-sage-200 p-5 mb-7 grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">NAMA PEMAIN</span>
+            <span id="completePlayerName" class="text-sm sm:text-base font-extrabold text-sage-900">Hafiz Cilik</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">SURAT</span>
+            <span id="completeSurahName" class="text-sm sm:text-base font-extrabold text-sage-900">Al-Ikhlas</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">AYAT DISUSUN</span>
+            <span id="completeAyahCount" class="text-sm sm:text-base font-extrabold text-sage-900">4 Ayat</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">SKOR AKHIR</span>
+            <span id="completeFinalScore" class="text-lg sm:text-xl font-extrabold text-sage-700">400</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">BINTANG SURAT</span>
+            <span id="completeStarsCount" class="text-lg sm:text-xl font-extrabold text-amber-600">3 / 3 ⭐</span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-sage-500 block">WAKTU SELESAI</span>
+            <span id="completeTime" class="text-sm sm:text-base font-extrabold text-sage-900 font-mono">00:45</span>
+          </div>
+        </div>
+
+        <!-- Tombol Aksi Setelah Selesai -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button
+            onclick="replayCurrentSurah()"
+            class="py-3.5 px-4 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-extrabold text-sm shadow-md transition cursor-pointer"
+          >
+            🔄 ULANGI PERMAINAN
+          </button>
+          <button
+            onclick="navigateTo('surah-list')"
+            class="py-3.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm shadow-md transition cursor-pointer"
+          >
+            📚 PILIH SURAT LAIN
+          </button>
+          <button
+            onclick="startMurojaahForCurrentSurah()"
+            class="py-3.5 px-4 rounded-2xl bg-white hover:bg-sage-50 text-sage-800 border-2 border-sage-300 font-extrabold text-sm transition cursor-pointer"
+          >
+            🎧 MUROJAAH LAGI
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 5. MODE MUROJAAH                                          -->
+    <!-- ========================================================= -->
+    <section id="view-murojaah" class="view-section hidden animate-pop">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-sage-600 hover:text-sage-800 mb-1">
+            <span>←</span> Kembali ke Beranda
+          </button>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-sage-900">🎧 Mode Murojaah Hafalan</h2>
+          <p class="text-sm text-sage-600">Dengarkan bacaan Qari, sembunyikan teks untuk menguji hafalan, atau susun ulang ayat!</p>
+        </div>
+
+        <!-- Pemilih Surat Murojaah -->
+        <div class="w-full sm:w-72">
+          <label for="murojaahSurahSelect" class="block text-xs font-bold text-sage-700 mb-1">Pilih Surat Juz 30:</label>
+          <select
+            id="murojaahSurahSelect"
+            onchange="loadMurojaahSurah(this.value)"
+            class="w-full px-4 py-3 rounded-xl bg-white border-2 border-sage-300 focus:border-sage-600 focus:outline-none font-bold text-sage-900 text-sm"
+          >
+            <!-- Diisi otomatis dengan 37 surat -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Kontrol Utama Murojaah -->
+      <div class="bg-white rounded-2xl border border-sage-200 p-4 mb-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Toggle Tampilkan / Sembunyikan Teks Ayat -->
+          <button
+            id="murojaahToggleTextBtn"
+            onclick="toggleMurojaahHideText()"
+            class="px-4 py-2.5 rounded-xl bg-sage-100 hover:bg-sage-200 text-sage-800 font-bold text-xs sm:text-sm flex items-center gap-2 transition"
+          >
+            <span id="murojaahEyeIcon">🙈</span>
+            <span id="murojaahToggleTextLabel">Sembunyikan Teks Ayat</span>
+          </button>
+
+          <!-- Toggle Pengulangan Otomatis Audio -->
+          <button
+            id="murojaahLoopBtn"
+            onclick="toggleMurojaahAutoLoop()"
+            class="px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold text-xs sm:text-sm flex items-center gap-2 transition"
+          >
+            <span>🔁</span>
+            <span id="murojaahLoopLabel">Pengulangan Otomatis: MATI</span>
+          </button>
+        </div>
+
+        <button
+          onclick="playCurrentMurojaahAsGame()"
+          class="px-4 py-2.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-extrabold text-xs sm:text-sm shadow-sm transition"
+        >
+          🎮 Latihan Susun Surat Ini
+        </button>
+      </div>
+
+      <!-- Daftar Ayat Murojaah -->
+      <div id="murojaahLoading" class="hidden bg-white rounded-3xl border border-sage-200 p-10 text-center">
+        <div class="w-12 h-12 border-4 border-sage-200 border-t-sage-600 rounded-full animate-spin mx-auto mb-3"></div>
+        <p class="font-bold text-sage-700">Memuat ayat-ayat murojaah...</p>
+      </div>
+
+      <div id="murojaahAyahList" class="space-y-4">
+        <!-- Daftar kartu ayat murojaah dirender di sini -->
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 6. DASHBOARD HASIL BELAJAR                                -->
+    <!-- ========================================================= -->
+    <section id="view-dashboard" class="view-section hidden animate-pop">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-sage-600 hover:text-sage-800 mb-1">
+            <span>←</span> Kembali ke Beranda
+          </button>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-sage-900">🏆 Dashboard Hasil Belajar</h2>
+          <p class="text-sm text-sage-600">Catatan perkembangan hafalan dan permainan <strong id="dashPlayerName" class="text-sage-800">Hafiz Cilik</strong>.</p>
+        </div>
+
+        <button
+          onclick="openResetProgressModal()"
+          class="self-start px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition"
+        >
+          🗑️ Reset Data Belajar
+        </button>
+      </div>
+
+      <!-- 4 Kartu Statistik Utama -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-2xl border border-sage-200 p-5 shadow-sm">
+          <span class="text-2xl mb-1 block">📖</span>
+          <span class="text-xs font-bold text-sage-500 block">SURAT SELESAI</span>
+          <span id="dashCompletedSurahs" class="text-2xl font-extrabold text-sage-900">0 / 37</span>
+        </div>
+        <div class="bg-white rounded-2xl border border-sage-200 p-5 shadow-sm">
+          <span class="text-2xl mb-1 block">🧩</span>
+          <span class="text-xs font-bold text-sage-500 block">AYAT DISUSUN</span>
+          <span id="dashTotalAyahs" class="text-2xl font-extrabold text-sage-900">0</span>
+        </div>
+        <div class="bg-white rounded-2xl border border-amber-200 p-5 shadow-sm">
+          <span class="text-2xl mb-1 block">⭐</span>
+          <span class="text-xs font-bold text-amber-600 block">TOTAL BINTANG</span>
+          <span id="dashTotalStars" class="text-2xl font-extrabold text-amber-700">0</span>
+        </div>
+        <div class="bg-white rounded-2xl border border-sage-200 p-5 shadow-sm">
+          <span class="text-2xl mb-1 block">📊</span>
+          <span class="text-xs font-bold text-sage-500 block">CAPAIAN JUZ 30</span>
+          <span id="dashPercentage" class="text-2xl font-extrabold text-sage-700">0%</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Skor Masing-Masing Surat -->
+        <div class="bg-white rounded-3xl border border-sage-200 p-5 sm:p-6 shadow-sm">
+          <h3 class="text-lg font-extrabold text-sage-900 mb-4 flex items-center gap-2">
+            <span>🌟</span> Skor & Status Surat Juz 30
+          </h3>
+          <div id="dashSurahScoresList" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Diisi otomatis -->
+          </div>
+        </div>
+
+        <!-- Riwayat Permainan -->
+        <div class="bg-white rounded-3xl border border-sage-200 p-5 sm:p-6 shadow-sm">
+          <h3 class="text-lg font-extrabold text-sage-900 mb-4 flex items-center gap-2">
+            <span>🕒</span> Riwayat Permainan Terakhir
+          </h3>
+          <div id="dashHistoryList" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Diisi otomatis -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 7. PANDUAN BERMAIN                                        -->
+    <!-- ========================================================= -->
+    <section id="view-guide" class="view-section hidden animate-pop">
+      <div class="max-w-3xl mx-auto bg-white rounded-3xl border-2 border-sage-200 p-6 sm:p-10 shadow-md">
+        <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-sage-600 hover:text-sage-800 mb-3">
+          <span>←</span> Kembali ke Beranda
+        </button>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-sage-900 mb-2">📖 Panduan Bermain Hafiz Cilik</h2>
+        <p class="text-sm sm:text-base text-sage-600 mb-6">Ikuti langkah mudah ini untuk belajar menyusun dan menghafal ayat Juz 30:</p>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-sage-50 border border-sage-200">
+            <div class="w-10 h-10 rounded-xl bg-sage-600 text-white font-extrabold flex items-center justify-center shrink-0">1</div>
+            <div>
+              <h3 class="font-extrabold text-sage-900">Pilih Surat Juz 30</h3>
+              <p class="text-sm text-sage-700">Tekan tombol <strong>Mulai Bermain</strong> lalu pilih surat yang ingin dipelajari dari 37 surat Juz 30 (An-Naba sampai An-Nas).</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-cream-100 border border-sage-200">
+            <div class="w-10 h-10 rounded-xl bg-sage-600 text-white font-extrabold flex items-center justify-center shrink-0">2</div>
+            <div>
+              <h3 class="font-extrabold text-sage-900">Susun Potongan Ayat dari Kanan ke Kiri</h3>
+              <p class="text-sm text-sage-700">Pilih potongan kata yang diacak satu per satu sesuai urutan bacaan Al-Qur'an yang benar (dimulai dari sebelah kanan).</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-amber-50/70 border border-amber-200">
+            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white font-extrabold flex items-center justify-center shrink-0">3</div>
+            <div>
+              <h3 class="font-extrabold text-sage-900">Gunakan Fitur Bantuan Jika Perlu</h3>
+              <p class="text-sm text-sage-700">Kamu bisa menekan <strong>Dengarkan Ayat</strong> untuk mendengar bacaan Qari, <strong>Lihat Ayat</strong> untuk mengintip ayat lengkap, atau <strong>Petunjuk</strong> untuk mengisi potongan berikutnya.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-sage-50 border border-sage-200">
+            <div class="w-10 h-10 rounded-xl bg-gold-500 text-white font-extrabold flex items-center justify-center shrink-0">⭐</div>
+            <div>
+              <h3 class="font-extrabold text-sage-900">Sistem Nilai & Bintang</h3>
+              <ul class="text-sm text-sage-700 list-disc list-inside space-y-1 mt-1">
+                <li><strong>100 Poin:</strong> Benar langsung tanpa bantuan.</li>
+                <li><strong>80 Poin:</strong> Benar dengan bantuan (Lihat Ayat / Petunjuk).</li>
+                <li><strong>60 Poin:</strong> Benar setelah mencoba kembali.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onclick="navigateTo('surah-list')"
+          class="w-full py-4 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-extrabold text-lg shadow-md transition"
+        >
+          Siap! Pilih Surat Sekarang 🎮
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL KONFIRMASI KUSTOM (PENGGANTI ALERT/CONFIRM) ==================== -->
+  <div id="customModalBackdrop" class="fixed inset-0 z-50 hidden bg-sage-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border-2 border-sage-200 max-w-md w-full p-6 text-center shadow-2xl animate-pop">
+      <div id="customModalIcon" class="text-4xl mb-3">🤔</div>
+      <h3 id="customModalTitle" class="text-xl font-extrabold text-sage-900 mb-2">Konfirmasi</h3>
+      <p id="customModalMessage" class="text-sm text-sage-700 mb-6">Apakah kamu yakin?</p>
+      <div class="flex gap-3 justify-center">
+        <button
+          id="customModalCancelBtn"
+          onclick="closeCustomModal()"
+          class="flex-1 py-3 px-4 rounded-xl bg-sage-100 hover:bg-sage-200 text-sage-800 font-bold text-sm transition"
+        >
+          Batal
+        </button>
+        <button
+          id="customModalConfirmBtn"
+          class="flex-1 py-3 px-4 rounded-xl bg-sage-600 hover:bg-sage-700 text-white font-extrabold text-sm transition"
+        >
+          Ya, Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white/80 border-t border-sage-200 py-4 px-4 text-center text-xs text-sage-600">
+    <p class="font-semibold">
+      Hafiz.Go • Teks Al-Qur'an Uthmani & Audio Bacaan Qari Terverifikasi • <span class="text-sage-800 font-bold">Terus Semangat Murojaah!</span>
+    </p>
+  </footer>
+
+  <!-- ==================== AUDIO PLAYER TERSEMBUNYI ==================== -->
+  <audio id="quranAudioPlayer" preload="none"></audio>
+
+  <!-- ==================== LOGIKA APLIKASI JAVASCRIPT ==================== -->
+  <script>
+    /**
+     * ============================================================================
+     * 1. DATA MASTER 37 SURAT JUZ 30 (Nomor Surat 78 - 114)
+     * Informasi metadata resmi seluruh 37 surat dalam Juz 30.
+     * Teks Arab ayat & audio bacaan diambil langsung dari API Al-Qur'an
+     * tepercaya (AlQuran Cloud - edisi ar.alafasy / Uthmani) tanpa karangan.
+     * ============================================================================
+     */
+    const JUZ_30_SURAHS = [
+      { number: 78, latin: "An-Naba'", arabic: "النبأ", ayahsCount: 40 },
+      { number: 79, latin: "An-Nazi'at", arabic: "النازعات", ayahsCount: 46 },
+      { number: 80, latin: "'Abasa", arabic: "عبس", ayahsCount: 42 },
+      { number: 81, latin: "At-Takwir", arabic: "التكوير", ayahsCount: 29 },
+      { number: 82, latin: "Al-Infitar", arabic: "الانفطار", ayahsCount: 19 },
+      { number: 83, latin: "Al-Mutaffifin", arabic: "المطففين", ayahsCount: 36 },
+      { number: 84, latin: "Al-Insyiqaq", arabic: "الانشقاق", ayahsCount: 25 },
+      { number: 85, latin: "Al-Buruj", arabic: "البروج", ayahsCount: 22 },
+      { number: 86, latin: "At-Tariq", arabic: "الطارق", ayahsCount: 17 },
+      { number: 87, latin: "Al-A'la", arabic: "الأعلى", ayahsCount: 19 },
+      { number: 88, latin: "Al-Ghasyiyah", arabic: "الغاشية", ayahsCount: 26 },
+      { number: 89, latin: "Al-Fajr", arabic: "الفجر", ayahsCount: 30 },
+      { number: 90, latin: "Al-Balad", arabic: "البلد", ayahsCount: 20 },
+      { number: 91, latin: "Asy-Syams", arabic: "الشمس", ayahsCount: 15 },
+      { number: 92, latin: "Al-Lail", arabic: "الليل", ayahsCount: 21 },
+      { number: 93, latin: "Ad-Duha", arabic: "الضحى", ayahsCount: 11 },
+      { number: 94, latin: "Asy-Syarh", arabic: "الشرح", ayahsCount: 8 },
+      { number: 95, latin: "At-Tin", arabic: "التين", ayahsCount: 8 },
+      { number: 96, latin: "Al-'Alaq", arabic: "العلق", ayahsCount: 19 },
+      { number: 97, latin: "Al-Qadr", arabic: "القدر", ayahsCount: 5 },
+      { number: 98, latin: "Al-Bayyinah", arabic: "البينة", ayahsCount: 8 },
+      { number: 99, latin: "Az-Zalzalah", arabic: "الزلزلة", ayahsCount: 8 },
+      { number: 100, latin: "Al-'Adiyat", arabic: "العاديات", ayahsCount: 11 },
+      { number: 101, latin: "Al-Qari'ah", arabic: "القارعة", ayahsCount: 11 },
+      { number: 102, latin: "At-Takatsur", arabic: "التكاثر", ayahsCount: 8 },
+      { number: 103, latin: "Al-'Asr", arabic: "العصر", ayahsCount: 3 },
+      { number: 104, latin: "Al-Humazah", arabic: "الهمزة", ayahsCount: 9 },
+      { number: 105, latin: "Al-Fil", arabic: "الفيل", ayahsCount: 5 },
+      { number: 106, latin: "Quraisy", arabic: "قريش", ayahsCount: 4 },
+      { number: 107, latin: "Al-Ma'un", arabic: "الماعون", ayahsCount: 7 },
+      { number: 108, latin: "Al-Kautsar", arabic: "الكوثر", ayahsCount: 3 },
+      { number: 109, latin: "Al-Kafirun", arabic: "الكافرون", ayahsCount: 6 },
+      { number: 110, latin: "An-Nasr", arabic: "النصر", ayahsCount: 3 },
+      { number: 111, latin: "Al-Lahab", arabic: "المسد", ayahsCount: 5 },
+      { number: 112, latin: "Al-Ikhlas", arabic: "الإخلاص", ayahsCount: 4 },
+      { number: 113, latin: "Al-Falaq", arabic: "الفلق", ayahsCount: 5 },
+      { number: 114, latin: "An-Nas", arabic: "الناس", ayahsCount: 6 }
+    ];
+
+    /**
+     * Cadangan Lokal Terverifikasi untuk Surat Populer (Offline Fallback)
+     * Memastikan permainan langsung dapat dimainkan bahkan jika jaringan lambat.
+     */
+    const VERIFIED_OFFLINE_SURAHS = {
+      103: [
+        { numberInSurah: 1, text: "وَٱلْعَصْرِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6177.mp3" },
+        { numberInSurah: 2, text: "إِنَّ ٱلْإِنسَٰنَ لَفِى خُسْرٍ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6178.mp3" },
+        { numberInSurah: 3, text: "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6179.mp3" }
+      ],
+      108: [
+        { numberInSurah: 1, text: "إِنَّآ أَعْطَيْنَٰكَ ٱلْكَوْثَرَ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6205.mp3" },
+        { numberInSurah: 2, text: "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6206.mp3" },
+        { numberInSurah: 3, text: "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6207.mp3" }
+      ],
+      110: [
+        { numberInSurah: 1, text: "إِذَا جَآءَ نَصْرُ ٱللَّهِ وَٱلْفَتْحُ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6214.mp3" },
+        { numberInSurah: 2, text: "وَرَأَيْتَ ٱلنَّاسَ يَدْخُلُونَ فِى دِينِ ٱللَّهِ أَفْوَاجًا", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6215.mp3" },
+        { numberInSurah: 3, text: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَٱسْتَغْفِرْهُ ۚ إِنَّهُۥ كَانَ تَوَّابًا", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6216.mp3" }
+      ],
+      112: [
+        { numberInSurah: 1, text: "قُلْ هُوَ ٱللَّهُ أَحَدٌ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6222.mp3" },
+        { numberInSurah: 2, text: "ٱللَّهُ ٱلصَّمَدُ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6223.mp3" },
+        { numberInSurah: 3, text: "لَمْ يَلِدْ وَلَمْ يُولَدْ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6224.mp3" },
+        { numberInSurah: 4, text: "وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6225.mp3" }
+      ],
+      113: [
+        { numberInSurah: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6226.mp3" },
+        { numberInSurah: 2, text: "مِن شَرِّ مَا خَلَقَ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6227.mp3" },
+        { numberInSurah: 3, text: "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6228.mp3" },
+        { numberInSurah: 4, text: "وَمِن شَرِّ ٱلنَّفَّٰثَٰتِ فِى ٱلْعُقَدِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6229.mp3" },
+        { numberInSurah: 5, text: "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6230.mp3" }
+      ],
+      114: [
+        { numberInSurah: 1, text: "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6231.mp3" },
+        { numberInSurah: 2, text: "مَلِكِ ٱلنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6232.mp3" },
+        { numberInSurah: 3, text: "إِلَٰهِ ٱلنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6233.mp3" },
+        { numberInSurah: 4, text: "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6234.mp3" },
+        { numberInSurah: 5, text: "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6235.mp3" },
+        { numberInSurah: 6, text: "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ", audio: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6236.mp3" }
+      ]
+    };
+
+    /**
+     * ============================================================================
+     * 2. STATE APLIKASI & PENYIMPANAN LOCALSTORAGE
+     * ============================================================================
+     */
+    const STORAGE_KEY = 'hafiz_cilik_juz30_state_v1';
+    const QURAN_CACHE_KEY = 'hafiz_cilik_quran_cache_v1';
+
+    let appState = {
+      playerName: 'Hafiz Cilik',
+      soundEnabled: true,
+      surahProgress: {}, // { [surahNumber]: { status: 'unstarted'|'in_progress'|'completed', bestScore: 0, stars: 0, ayahsCompleted: 0, lastAyahIndex: 0 } }
+      history: [] // [{ date, surahNumber, surahName, score, stars, ayahsCount, duration }]
+    };
+
+    // State Sesi Permainan Aktif
+    let gameState = {
+      surahMeta: null,
+      ayahs: [],
+      currentAyahIndex: 0,
+      targetWords: [],      // Urutan kata benar: ['قُلْ', 'هُوَ', 'ٱللَّهُ', 'أَحَدٌ']
+      shuffledChoices: [],  // [{ id, word, used }]
+      selectedAnswer: [],   // [{ id, word }]
+      usedHint: false,
+      hasRetried: false,
+      isAyahSolved: false,
+      sessionScore: 0,
+      sessionStars: 0,
+      startTime: null,
+      timerInterval: null,
+      elapsedSeconds: 0
+    };
+
+    // State Mode Murojaah
+    let murojaahState = {
+      surahNumber: 112,
+      ayahs: [],
+      hideText: false,
+      autoLoop: false,
+      playingAyahIndex: -1
+    };
+
+    // Cache ayat Al-Qur'an yang sudah diambil dari API
+    let quranCache = {};
+
+    /**
+     * Memuat state pemain dan cache Al-Qur'an dari localStorage
+     */
+    function loadAppState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState = { ...appState, ...parsed };
+        }
+        const savedCache = localStorage.getItem(QURAN_CACHE_KEY);
+        if (savedCache) {
+          quranCache = JSON.parse(savedCache);
+        }
+      } catch (e) {
+        console.warn('Gagal membaca localStorage:', e);
+      }
+    }
+
+    /**
+     * Menyimpan state pemain ke localStorage
+     */
+    function saveAppState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Gagal menyimpan localStorage:', e);
+      }
+    }
+
+    function saveQuranCache() {
+      try {
+        localStorage.setItem(QURAN_CACHE_KEY, JSON.stringify(quranCache));
+      } catch (e) {
+        console.warn('Cache penuh, melewati penyimpanan cache:', e);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 3. EFEK SUARA INTERAKTIF (TONE.JS)
+     * ============================================================================
+     */
+    let synth = null;
+
+    function ensureAudioContext() {
+      if (!appState.soundEnabled) return false;
+      if (typeof Tone !== 'undefined') {
+        if (Tone.context.state !== 'running') {
+          Tone.start();
+        }
+        if (!synth) {
+          synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'triangle' },
+            envelope: { attack: 0.02, decay: 0.15, sustain: 0.1, release: 0.4 }
+          }).toDestination();
+          synth.volume.value = -8;
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function playSfx(type) {
+      if (!ensureAudioContext()) return;
+      try {
+        const now = Tone.now();
+        if (type === 'click') {
+          synth.triggerAttackRelease('C5', '32n', now);
+        } else if (type === 'remove') {
+          synth.triggerAttackRelease('A4', '32n', now);
+        } else if (type === 'wrong') {
+          synth.triggerAttackRelease('E4', '16n', now);
+          synth.triggerAttackRelease('Eb4', '8n', now + 0.12);
+        } else if (type === 'ayahSuccess') {
+          synth.triggerAttackRelease('C5', '16n', now);
+          synth.triggerAttackRelease('E5', '16n', now + 0.1);
+          synth.triggerAttackRelease('G5', '16n', now + 0.2);
+          synth.triggerAttackRelease('C6', '4n', now + 0.3);
+        } else if (type === 'surahComplete') {
+          const notes = ['C5', 'E5', 'G5', 'A5', 'G5', 'C6'];
+          notes.forEach((n, i) => synth.triggerAttackRelease(n, '8n', now + i * 0.12));
+        }
+      } catch (e) {
+        // Abaikan jika audio diblokir browser
+      }
+    }
+
+    function toggleSoundEffects() {
+      appState.soundEnabled = !appState.soundEnabled;
+      document.getElementById('soundIcon').textContent = appState.soundEnabled ? '🔊' : '🔇';
+      saveAppState();
+      if (appState.soundEnabled) playSfx('click');
+    }
+
+    /**
+     * ============================================================================
+     * 4. PENGAMBILAN & VALIDASI TEKS AL-QUR'AN TERPERCAYA
+     * ============================================================================
+     */
+    async function fetchSurahAyahs(surahNumber) {
+      // 1. Cek cache memori / localStorage terlebih dahulu
+      if (quranCache[surahNumber] && quranCache[surahNumber].length > 0) {
+        return quranCache[surahNumber];
+      }
+
+      // 2. Coba ambil dari sumber Al-Qur'an tepercaya (AlQuran Cloud - Edisi Mishary Alafasy Uthmani)
+      try {
+        const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`);
+        if (!response.ok) throw new Error('Respon server Al-Qur\'an tidak valid');
+        const json = await response.json();
+
+        if (json.code === 200 && json.data && Array.isArray(json.data.ayahs)) {
+          const bismillahPrefix = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ ";
+          const cleanedAyahs = json.data.ayahs.map((ayah, idx) => {
+            let text = ayah.text.trim();
+            // Pada API Uthmani, ayat pertama surat selain Al-Fatihah diawali Basmalah
+            if (idx === 0 && surahNumber !== 1 && text.startsWith(bismillahPrefix)) {
+              text = text.slice(bismillahPrefix.length).trim();
+            }
+            return {
+              numberInSurah: ayah.numberInSurah,
+              text: text,
+              audio: ayah.audio || ''
+            };
+          });
+
+          // Validasi bahwa tidak ada ayat kosong
+          if (cleanedAyahs.every(a => a.text && a.text.length > 0)) {
+            quranCache[surahNumber] = cleanedAyahs;
+            saveQuranCache();
+            return cleanedAyahs;
+          }
+        }
+        throw new Error('Format data ayat tidak sesuai');
+      } catch (err) {
+        // 3. Gunakan cadangan terverifikasi offline jika tersedia
+        if (VERIFIED_OFFLINE_SURAHS[surahNumber]) {
+          return VERIFIED_OFFLINE_SURAHS[surahNumber];
+        }
+        throw err;
+      }
+    }
+
+    /**
+     * Memecah teks ayat asli menjadi potongan kata yang akurat tanpa mengubah harakat.
+     * Tanda waqaf berdiri sendiri (seperti ۚ ۖ ۗ ۘ ۙ ۛ) digabung ke kata sebelumnya
+     * agar tidak menjadi kartu terpisah yang membingungkan anak.
+     */
+    function splitAyahIntoWords(ayahText) {
+      const rawTokens = ayahText.trim().split(/\s+/).filter(Boolean);
+      const waqfMarksRegex = /^[\u06D6-\u06ED]+$/;
+      const mergedWords = [];
+
+      for (const token of rawTokens) {
+        if (waqfMarksRegex.test(token) && mergedWords.length > 0) {
+          mergedWords[mergedWords.length - 1] += ' ' + token;
+        } else {
+          mergedWords.push(token);
+        }
+      }
+      return mergedWords;
+    }
+
+    /**
+     * Mengacak array (Fisher-Yates Shuffle) dan memastikan urutan acak berbeda dari aslinya
+     * jika jumlah kata > 1.
+     */
+    function shuffleWords(words) {
+      const items = words.map((word, idx) => ({
+        id: `w-${idx}-${Math.random().toString(36).slice(2, 7)}`,
+        word: word,
+        used: false
+      }));
+
+      if (items.length <= 1) return items;
+
+      let attempts = 0;
+      do {
+        for (let i = items.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [items[i], items[j]] = [items[j], items[i]];
+        }
+        attempts++;
+      } while (
+        attempts < 10 &&
+        items.every((item, idx) => item.word === words[idx])
+      );
+
+      return items;
+    }
+
+    /**
+     * ============================================================================
+     * 5. NAVIGASI HALAMAN & PEMBARUAN UI BERANDA
+     * ============================================================================
+     */
+    function navigateTo(viewId) {
+      playSfx('click');
+      stopAllQuranAudio();
+
+      if (viewId !== 'game' && gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+        gameState.timerInterval = null;
+      }
+
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      const target = document.getElementById(`view-${viewId}`);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      if (viewId === 'home') updateHomeUI();
+      if (viewId === 'surah-list') renderSurahGrid();
+      if (viewId === 'dashboard') renderDashboard();
+      if (viewId === 'murojaah') {
+        populateMurojaahSelect();
+        loadMurojaahSurah(murojaahState.surahNumber);
+      }
+    }
+
+    function savePlayerName() {
+      const input = document.getElementById('playerNameInput');
+      const val = input.value.trim();
+      appState.playerName = val || 'Hafiz Cilik';
+      saveAppState();
+      updateHomeUI();
+      playSfx('click');
+
+      const fb = document.getElementById('nameSavedFeedback');
+      fb.classList.remove('hidden');
+      setTimeout(() => fb.classList.add('hidden'), 2500);
+    }
+
+    function calculateGlobalStats() {
+      let completedSurahs = 0;
+      let totalStars = 0;
+      let totalAyahsArranged = 0;
+
+      JUZ_30_SURAHS.forEach(s => {
+        const prog = appState.surahProgress[s.number];
+        if (prog) {
+          if (prog.status === 'completed') completedSurahs++;
+          totalStars += prog.stars || 0;
+          totalAyahsArranged += prog.ayahsCompleted || 0;
+        }
+      });
+
+      const percentage = Math.round((completedSurahs / JUZ_30_SURAHS.length) * 100);
+      return { completedSurahs, totalStars, totalAyahsArranged, percentage };
+    }
+
+    function updateHomeUI() {
+      document.getElementById('playerNameInput').value = appState.playerName;
+      document.getElementById('navPlayerName').textContent = appState.playerName;
+      document.getElementById('soundIcon').textContent = appState.soundEnabled ? '🔊' : '🔇';
+
+      const stats = calculateGlobalStats();
+      document.getElementById('navTotalStars').textContent = stats.totalStars;
+      document.getElementById('homeTotalStars').textContent = stats.totalStars;
+      document.getElementById('homeProgressText').textContent = `${stats.completedSurahs} / 37 Surat`;
+      document.getElementById('homeProgressBar').style.width = `${stats.percentage}%`;
+      document.getElementById('homeProgressPercent').textContent = `${stats.percentage}% Selesai`;
+    }
+
+    /**
+     * ============================================================================
+     * 6. RENDER DAFTAR 37 SURAT JUZ 30
+     * ============================================================================
+     */
+    function renderSurahGrid() {
+      const container = document.getElementById('surahGridContainer');
+      const searchQuery = document.getElementById('surahSearchInput').value.toLowerCase().trim();
+      const filterVal = document.getElementById('surahFilterSelect').value;
+
+      const filtered = JUZ_30_SURAHS.filter(s => {
+        const prog = appState.surahProgress[s.number] || { status: 'unstarted', stars: 0 };
+        const matchesSearch =
+          s.latin.toLowerCase().includes(searchQuery) ||
+          String(s.number).includes(searchQuery);
+
+        if (!matchesSearch) return false;
+        if (filterVal === 'short') return s.number >= 103;
+        if (filterVal === 'completed') return prog.status === 'completed';
+        if (filterVal === 'unstarted') return prog.status === 'unstarted';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-3xl border border-sage-200 p-10 text-center">
+            <p class="text-lg font-bold text-sage-700">Surat tidak ditemukan 🔍</p>
+            <p class="text-sm text-sage-500 mt-1">Coba kata kunci pencarian lain ya.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((surah, index) => {
+        const prog = appState.surahProgress[surah.number] || { status: 'unstarted', stars: 0, bestScore: 0 };
+        const urutJuz = JUZ_30_SURAHS.findIndex(x => x.number === surah.number) + 1;
+
+        let statusBadge = '';
+        let cardBorder = 'border-sage-200 hover:border-sage-400';
+
+        if (prog.status === 'completed') {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-extrabold">✅ Selesai</span>`;
+          cardBorder = 'border-emerald-300 bg-emerald-50/20 hover:border-emerald-500';
+        } else if (prog.status === 'in_progress') {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold">⏳ Sedang Dipelajari</span>`;
+          cardBorder = 'border-amber-300 hover:border-amber-500';
+        } else {
+          statusBadge = `<span class="px-2.5 py-1 rounded-full bg-sage-100 text-sage-700 text-[11px] font-bold">Belum Dimulai</span>`;
+        }
+
+        const starsHtml = [1, 2, 3].map(starNum =>
+          `<span class="${starNum <= (prog.stars || 0) ? 'opacity-100' : 'opacity-25 grayscale'}">⭐</span>`
+        ).join('');
+
+        return `
+          <div
+            onclick="startSurahGame(${surah.number})"
+            class="bg-white rounded-2xl border-2 ${cardBorder} p-5 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group"
+          >
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-3">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-9 h-9 rounded-xl bg-sage-100 group-hover:bg-sage-600 group-hover:text-white text-sage-800 font-extrabold text-xs flex items-center justify-center transition">
+                    ${urutJuz}
+                  </span>
+                  <div>
+                    <h3 class="font-extrabold text-sage-900 text-base sm:text-lg leading-tight">${surah.latin}</h3>
+                    <span class="text-xs text-sage-500 font-semibold">QS. ${surah.number} • ${surah.ayahsCount} Ayat</span>
+                  </div>
+                </div>
+                <span class="arabic-text text-2xl sm:text-3xl font-bold text-sage-800">${surah.arabic}</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-sage-100 flex items-center justify-between">
+              ${statusBadge}
+              <div class="flex items-center gap-0.5 text-sm" title="Bintang diperoleh">
+                ${starsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * ============================================================================
+     * 7. GAME UTAMA: MENYUSUN AYAT AL-QUR'AN
+     * ============================================================================
+     */
+    async function startSurahGame(surahNumber) {
+      playSfx('click');
+      const surahMeta = JUZ_30_SURAHS.find(s => s.number === surahNumber);
+      if (!surahMeta) return;
+
+      // Pindah ke tampilan game
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('view-game').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Reset Game State
+      gameState = {
+        surahMeta,
+        ayahs: [],
+        currentAyahIndex: 0,
+        targetWords: [],
+        shuffledChoices: [],
+        selectedAnswer: [],
+        usedHint: false,
+        hasRetried: false,
+        isAyahSolved: false,
+        sessionScore: 0,
+        sessionStars: 0,
+        startTime: Date.now(),
+        timerInterval: null,
+        elapsedSeconds: 0
+      };
+
+      document.getElementById('gameSurahTitle').textContent = `Surat ${surahMeta.latin}`;
+      document.getElementById('gameSurahArabic').textContent = surahMeta.arabic;
+      document.getElementById('gameAyahProgressText').textContent = `Memuat ${surahMeta.ayahsCount} ayat...`;
+      document.getElementById('gameSessionScore').textContent = '0';
+      document.getElementById('gameSessionStars').textContent = '⭐ 0';
+      document.getElementById('gameTimerDisplay').textContent = '00:00';
+      document.getElementById('gameProgressBar').style.width = '0%';
+
+      // Tampilkan loading
+      document.getElementById('gameLoadingState').classList.remove('hidden');
+      document.getElementById('gameErrorState').classList.add('hidden');
+      document.getElementById('gameActiveContainer').classList.add('hidden');
+
+      try {
+        const ayahs = await fetchSurahAyahs(surahNumber);
+        gameState.ayahs = ayahs;
+
+        // Tandai status surat sebagai "Sedang Dipelajari" jika belum selesai
+        const prev = appState.surahProgress[surahNumber] || { status: 'unstarted', bestScore: 0, stars: 0, ayahsCompleted: 0 };
+        if (prev.status !== 'completed') {
+          appState.surahProgress[surahNumber] = { ...prev, status: 'in_progress' };
+          saveAppState();
+        }
+
+        document.getElementById('gameLoadingState').classList.add('hidden');
+        document.getElementById('gameActiveContainer').classList.remove('hidden');
+
+        startGameTimer();
+        setupAyahTurn(0);
+      } catch (error) {
+        document.getElementById('gameLoadingState').classList.add('hidden');
+        document.getElementById('gameErrorState').classList.remove('hidden');
+      }
+    }
+
+    function retryLoadCurrentSurah() {
+      if (gameState.surahMeta) {
+        startSurahGame(gameState.surahMeta.number);
+      }
+    }
+
+    function startGameTimer() {
+      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+      gameState.elapsedSeconds = 0;
+      gameState.timerInterval = setInterval(() => {
+        gameState.elapsedSeconds++;
+        document.getElementById('gameTimerDisplay').textContent = formatSeconds(gameState.elapsedSeconds);
+      }, 1000);
+    }
+
+    function formatSeconds(totalSec) {
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    /**
+     * Menyiapkan satu ayat untuk disusun oleh anak
+     */
+    function setupAyahTurn(ayahIndex) {
+      stopAllQuranAudio();
+      const ayah = gameState.ayahs[ayahIndex];
+      const total = gameState.ayahs.length;
+
+      gameState.currentAyahIndex = ayahIndex;
+      gameState.targetWords = splitAyahIntoWords(ayah.text);
+      gameState.shuffledChoices = shuffleWords(gameState.targetWords);
+      gameState.selectedAnswer = [];
+      gameState.usedHint = false;
+      gameState.hasRetried = false;
+      gameState.isAyahSolved = false;
+
+      // Update indikator progres
+      document.getElementById('gameAyahProgressText').textContent = `Ayat ${ayah.numberInSurah} dari ${total}`;
+      document.getElementById('gameAyahBadge').textContent = `Ayat ke-${ayah.numberInSurah}`;
+      const progressPct = Math.round((ayahIndex / total) * 100);
+      document.getElementById('gameProgressBar').style.width = `${progressPct}%`;
+
+      // Reset kotak bantuan & feedback
+      document.getElementById('peekAyahBox').classList.add('hidden');
+      document.getElementById('peekAyahText').textContent = ayah.text;
+      document.getElementById('audioStatusBanner').classList.add('hidden');
+      document.getElementById('gameFeedbackBox').classList.add('hidden');
+      document.getElementById('clearAnswerBtn').classList.remove('hidden');
+
+      renderGameBoard();
+    }
+
+    /**
+     * Merender area susunan jawaban & area pilihan potongan kata
+     */
+    function renderGameBoard() {
+      const dropZone = document.getElementById('answerDropZone');
+      const poolZone = document.getElementById('wordChoicesPool');
+
+      // 1. Render Susunan Jawaban (RTL)
+      if (gameState.selectedAnswer.length === 0) {
+        dropZone.innerHTML = `
+          <p id="answerPlaceholder" class="w-full text-center text-sage-500 text-sm font-medium py-4" dir="ltr">
+            Klik potongan ayat di bawah ini untuk menyusunnya di sini...
+          </p>
+        `;
+      } else {
+        dropZone.innerHTML = gameState.selectedAnswer.map((item, idx) => `
+          <button
+            onclick="unselectWord(${idx})"
+            ${gameState.isAyahSolved ? 'disabled' : ''}
+            class="answer-tile arabic-text px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-amber-100 hover:bg-amber-200 border-2 border-gold-500 text-sage-950 text-2xl sm:text-3xl font-bold cursor-pointer animate-pop"
+            title="Klik untuk mengembalikan potongan ini"
+          >
+            ${item.word}
+          </button>
+        `).join('');
+      }
+
+      // 2. Render Pilihan Potongan Kata
+      poolZone.innerHTML = gameState.shuffledChoices.map(choice => {
+        if (choice.used) {
+          return `
+            <div class="arabic-text px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-sage-100/50 border-2 border-dashed border-sage-200 text-transparent text-2xl sm:text-3xl font-bold select-none">
+              ${choice.word}
+            </div>
+          `;
+        }
+        return `
+          <button
+            onclick="selectWord('${choice.id}')"
+            ${gameState.isAyahSolved ? 'disabled' : ''}
+            class="word-tile arabic-text px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-white hover:bg-sage-50 border-2 border-sage-300 text-sage-900 text-2xl sm:text-3xl font-bold cursor-pointer"
+          >
+            ${choice.word}
+          </button>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Saat anak memilih potongan kata dari pilihan acak
+     */
+    function selectWord(choiceId) {
+      if (gameState.isAyahSolved) return;
+
+      const choice = gameState.shuffledChoices.find(c => c.id === choiceId);
+      if (!choice || choice.used) return;
+
+      playSfx('click');
+      choice.used = true;
+      gameState.selectedAnswer.push({ id: choice.id, word: choice.word });
+
+      renderGameBoard();
+
+      // Jika semua potongan ayat sudah dipilih, lakukan pengecekan otomatis!
+      if (gameState.selectedAnswer.length === gameState.targetWords.length) {
+        validateAyahAnswer();
+      }
+    }
+
+    /**
+     * Mengembalikan potongan kata dari area jawaban kembali ke pilihan
+     */
+    function unselectWord(answerIndex) {
+      if (gameState.isAyahSolved) return;
+
+      playSfx('remove');
+      const removed = gameState.selectedAnswer.splice(answerIndex, 1)[0];
+      if (removed) {
+        const choice = gameState.shuffledChoices.find(c => c.id === removed.id);
+        if (choice) choice.used = false;
+      }
+      document.getElementById('gameFeedbackBox').classList.add('hidden');
+      renderGameBoard();
+    }
+
+    /**
+     * Mengosongkan seluruh susunan jawaban saat ini
+     */
+    function clearCurrentAnswer() {
+      if (gameState.isAyahSolved || gameState.selectedAnswer.length === 0) return;
+      playSfx('remove');
+      gameState.selectedAnswer = [];
+      gameState.shuffledChoices.forEach(c => c.used = false);
+      document.getElementById('gameFeedbackBox').classList.add('hidden');
+      renderGameBoard();
+    }
+
+    /**
+     * Memeriksa apakah susunan ayat anak sudah 100% sesuai urutan asli Al-Qur'an
+     */
+    function validateAyahAnswer() {
+      const isCorrect = gameState.selectedAnswer.every(
+        (item, idx) => item.word === gameState.targetWords[idx]
+      );
+
+      const feedbackBox = document.getElementById('gameFeedbackBox');
+      const dropZone = document.getElementById('answerDropZone');
+
+      if (isCorrect) {
+        // JAWABAN BENAR!
+        gameState.isAyahSolved = true;
+        playSfx('ayahSuccess');
+
+        // Hitung skor ayat:
+        // - Tanpa bantuan & langsung benar: 100 poin
+        // - Menggunakan petunjuk / lihat ayat: 80 poin
+        // - Benar setelah mencoba kembali: 60 poin
+        let earnedPoints = 100;
+        if (gameState.usedHint) {
+          earnedPoints = 80;
+        } else if (gameState.hasRetried) {
+          earnedPoints = 60;
+        }
+
+        gameState.sessionScore += earnedPoints;
+        gameState.sessionStars += 1;
+
+        document.getElementById('gameSessionScore').textContent = gameState.sessionScore;
+        document.getElementById('gameSessionStars').textContent = `⭐ ${gameState.sessionStars}`;
+        document.getElementById('clearAnswerBtn').classList.add('hidden');
+
+        // Update progres ayat selesai di state global
+        const surahNum = gameState.surahMeta.number;
+        const prev = appState.surahProgress[surahNum] || { status: 'in_progress', bestScore: 0, stars: 0, ayahsCompleted: 0 };
+        appState.surahProgress[surahNum] = {
+          ...prev,
+          ayahsCompleted: Math.max(prev.ayahsCompleted || 0, gameState.currentAyahIndex + 1)
+        };
+        saveAppState();
+
+        const currentAyah = gameState.ayahs[gameState.currentAyahIndex];
+        const isLastAyah = gameState.currentAyahIndex + 1 >= gameState.ayahs.length;
+
+        feedbackBox.className = 'mb-5 p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-emerald-900 text-center animate-pop';
+        feedbackBox.innerHTML = `
+          <div class="text-3xl mb-1 animate-star">🌟 +${earnedPoints} Poin!</div>
+          <p class="font-extrabold text-base sm:text-lg mb-2">MasyaAllah, Benar Sekali! Barakallahu Fiik!</p>
+          <div class="bg-white/90 rounded-xl p-3 mb-4 border border-emerald-200">
+            <p class="arabic-text text-2xl sm:text-3xl font-bold text-sage-900">${currentAyah.text}</p>
+          </div>
+          <button
+            onclick="proceedAfterCorrectAyah()"
+            class="px-7 py-3.5 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-extrabold text-base shadow-md transition cursor-pointer"
+          >
+            ${isLastAyah ? '🏆 Lihat Hasil Akhir Surat' : 'Lanjut ke Ayat Berikutnya →'}
+          </button>
+        `;
+        feedbackBox.classList.remove('hidden');
+        renderGameBoard();
+
+        // Putar audio bacaan ayat sebagai penguatan hafalan
+        playCurrentAyahAudio(false, true);
+      } else {
+        // JAWABAN BELUM TEPAT -> Beri umpan balik ramah & kesempatan mencoba kembali
+        gameState.hasRetried = true;
+        playSfx('wrong');
+
+        dropZone.classList.add('animate-shake', 'border-rose-400', 'bg-rose-50/60');
+        setTimeout(() => {
+          dropZone.classList.remove('animate-shake', 'border-rose-400', 'bg-rose-50/60');
+        }, 550);
+
+        feedbackBox.className = 'mb-5 p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-900 text-center animate-pop';
+        feedbackBox.innerHTML = `
+          <p class="font-extrabold text-base mb-1">😊 Hampir Tepat! Yuk Coba Susun Kembali</p>
+          <p class="text-xs sm:text-sm font-medium text-amber-800 mb-3">
+            Perhatikan urutan bacaan ayat dari kanan ke kiri. Kamu juga bisa menekan <strong>Dengarkan Ayat</strong> untuk menyimak bacaannya.
+          </p>
+          <button
+            onclick="clearCurrentAnswer()"
+            class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm transition cursor-pointer"
+          >
+            🔄 Coba Susun Ulang
+          </button>
+        `;
+        feedbackBox.classList.remove('hidden');
+      }
+    }
+
+    function proceedAfterCorrectAyah() {
+      playSfx('click');
+      stopAllQuranAudio();
+      const nextIdx = gameState.currentAyahIndex + 1;
+      if (nextIdx < gameState.ayahs.length) {
+        setupAyahTurn(nextIdx);
+      } else {
+        finishSurahGame();
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 8. FITUR BANTUAN (LIHAT AYAT, AUDIO QARI, PETUNJUK)
+     * ============================================================================
+     */
+    // A. Lihat Ayat
+    function useHelpPeek() {
+      if (gameState.isAyahSolved) return;
+      playSfx('click');
+      gameState.usedHint = true;
+      const box = document.getElementById('peekAyahBox');
+      box.classList.toggle('hidden');
+    }
+
+    // B & C. Dengarkan Ayat & Ulangi Audio
+    function playCurrentAyahAudio(restart = false, silentOnError = false) {
+      const ayah = gameState.ayahs[gameState.currentAyahIndex];
+      if (!ayah) return;
+
+      const player = document.getElementById('quranAudioPlayer');
+      const banner = document.getElementById('audioStatusBanner');
+      const statusText = document.getElementById('audioStatusText');
+
+      if (!ayah.audio) {
+        if (!silentOnError) {
+          statusText.textContent = '⚠️ Audio bacaan untuk ayat ini belum tersedia.';
+          banner.classList.remove('hidden');
+        }
+        return;
+      }
+
+      try {
+        if (restart || player.src !== ayah.audio) {
+          player.src = ayah.audio;
+          player.currentTime = 0;
+        }
+        banner.classList.add('hidden');
+        const playPromise = player.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            if (!silentOnError) {
+              statusText.textContent = '⚠️ Audio bacaan tidak dapat diputar. Periksa koneksi internet atau izin suara browser.';
+              banner.classList.remove('hidden');
+            }
+          });
+        }
+      } catch (e) {
+        if (!silentOnError) {
+          statusText.textContent = '⚠️ Terjadi kendala saat memutar audio bacaan.';
+          banner.classList.remove('hidden');
+        }
+      }
+    }
+
+    function stopAllQuranAudio() {
+      const player = document.getElementById('quranAudioPlayer');
+      player.pause();
+      player.currentTime = 0;
+      player.onended = null;
+    }
+
+    // D. Petunjuk (Menempatkan potongan berikutnya yang benar secara otomatis)
+    function useHelpHint() {
+      if (gameState.isAyahSolved) return;
+      gameState.usedHint = true;
+
+      // Cari indeks pertama yang salah atau belum terisi
+      let correctPrefixLen = 0;
+      while (
+        correctPrefixLen < gameState.selectedAnswer.length &&
+        gameState.selectedAnswer[correctPrefixLen].word === gameState.targetWords[correctPrefixLen]
+      ) {
+        correctPrefixLen++;
+      }
+
+      // Kembalikan kata yang salah posisi setelah prefix benar
+      while (gameState.selectedAnswer.length > correctPrefixLen) {
+        const removed = gameState.selectedAnswer.pop();
+        const choice = gameState.shuffledChoices.find(c => c.id === removed.id);
+        if (choice) choice.used = false;
+      }
+
+      // Ambil kata benar berikutnya dari pool
+      const nextExpectedWord = gameState.targetWords[correctPrefixLen];
+      if (nextExpectedWord) {
+        const matchingChoice = gameState.shuffledChoices.find(
+          c => !c.used && c.word === nextExpectedWord
+        );
+        if (matchingChoice) {
+          selectWord(matchingChoice.id);
+        }
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 9. SELESAI SATU SURAT & HALAMAN APRESIASI
+     * ============================================================================
+     */
+    function finishSurahGame() {
+      if (gameState.timerInterval) {
+        clearInterval(gameState.timerInterval);
+        gameState.timerInterval = null;
+      }
+      playSfx('surahComplete');
+
+      const surahMeta = gameState.surahMeta;
+      const totalAyahs = gameState.ayahs.length;
+      const maxPossibleScore = totalAyahs * 100;
+      const finalScore = gameState.sessionScore;
+
+      // Hitung rating bintang surat (1-3 bintang berdasarkan persentase skor)
+      const ratio = finalScore / maxPossibleScore;
+      let earnedSurahStars = 1;
+      if (ratio >= 0.9) earnedSurahStars = 3;
+      else if (ratio >= 0.7) earnedSurahStars = 2;
+
+      const timeStr = formatSeconds(gameState.elapsedSeconds);
+
+      // Simpan progres tertinggi surat ke localStorage
+      const prev = appState.surahProgress[surahMeta.number] || { bestScore: 0, stars: 0 };
+      appState.surahProgress[surahMeta.number] = {
+        status: 'completed',
+        bestScore: Math.max(prev.bestScore || 0, finalScore),
+        stars: Math.max(prev.stars || 0, earnedSurahStars),
+        ayahsCompleted: totalAyahs
+      };
+
+      // Catat riwayat permainan
+      appState.history.unshift({
+        date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        surahNumber: surahMeta.number,
+        surahName: surahMeta.latin,
+        score: finalScore,
+        stars: earnedSurahStars,
+        ayahsCount: totalAyahs,
+        duration: timeStr
+      });
+      if (appState.history.length > 30) appState.history.pop();
+
+      saveAppState();
+      updateHomeUI();
+
+      // Tampilkan halaman selesai
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('view-complete').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      document.getElementById('completeSubtitle').textContent = `Kamu berhasil menyusun seluruh ayat Surat ${surahMeta.latin}.`;
+      document.getElementById('completePlayerName').textContent = appState.playerName;
+      document.getElementById('completeSurahName').textContent = surahMeta.latin;
+      document.getElementById('completeAyahCount').textContent = `${totalAyahs} Ayat`;
+      document.getElementById('completeFinalScore').textContent = `${finalScore} Poin`;
+      document.getElementById('completeStarsCount').textContent = `${earnedSurahStars} / 3 ⭐`;
+      document.getElementById('completeTime').textContent = timeStr;
+
+      document.getElementById('completeStarsDisplay').innerHTML = [1, 2, 3].map((s, idx) =>
+        `<span class="animate-star ${s <= earnedSurahStars ? '' : 'opacity-25 grayscale'}" style="animation-delay: ${idx * 0.15}s">⭐</span>`
+      ).join('');
+    }
+
+    function replayCurrentSurah() {
+      if (gameState.surahMeta) {
+        startSurahGame(gameState.surahMeta.number);
+      }
+    }
+
+    function startMurojaahForCurrentSurah() {
+      if (gameState.surahMeta) {
+        murojaahState.surahNumber = gameState.surahMeta.number;
+      }
+      navigateTo('murojaah');
+    }
+
+    function exitGameConfirm() {
+      openCustomModal(
+        '🚪',
+        'Keluar dari Permainan?',
+        'Progres ayat yang belum selesai pada sesi ini akan diulang. Tetap kembali ke daftar surat?',
+        () => navigateTo('surah-list')
+      );
+    }
+
+    /**
+     * ============================================================================
+     * 10. MODE MUROJAAH HAFALAN
+     * ============================================================================
+     */
+    function populateMurojaahSelect() {
+      const select = document.getElementById('murojaahSurahSelect');
+      select.innerHTML = JUZ_30_SURAHS.map((s, idx) =>
+        `<option value="${s.number}" ${Number(s.number) === Number(murojaahState.surahNumber) ? 'selected' : ''}>
+          ${idx + 1}. ${s.latin} (${s.arabic}) - ${s.ayahsCount} Ayat
+        </option>`
+      ).join('');
+    }
+
+    async function loadMurojaahSurah(surahNumber) {
+      stopAllQuranAudio();
+      murojaahState.surahNumber = Number(surahNumber);
+      murojaahState.playingAyahIndex = -1;
+
+      const listContainer = document.getElementById('murojaahAyahList');
+      const loadingEl = document.getElementById('murojaahLoading');
+
+      listContainer.innerHTML = '';
+      loadingEl.classList.remove('hidden');
+
+      try {
+        const ayahs = await fetchSurahAyahs(murojaahState.surahNumber);
+        murojaahState.ayahs = ayahs;
+        loadingEl.classList.add('hidden');
+        renderMurojaahList();
+      } catch (e) {
+        loadingEl.classList.add('hidden');
+        listContainer.innerHTML = `
+          <div class="bg-white rounded-2xl border border-rose-200 p-6 text-center text-rose-700 font-bold">
+            Gagal memuat ayat surat. Periksa koneksi internet dan coba lagi.
+          </div>
+        `;
+      }
+    }
+
+    function renderMurojaahList() {
+      const listContainer = document.getElementById('murojaahAyahList');
+      listContainer.innerHTML = murojaahState.ayahs.map((ayah, idx) => {
+        const isPlaying = murojaahState.playingAyahIndex === idx;
+        return `
+          <div class="bg-white rounded-2xl border-2 ${isPlaying ? 'border-amber-400 bg-amber-50/40' : 'border-sage-200'} p-5 shadow-sm transition">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="px-3 py-1 rounded-full bg-sage-100 text-sage-800 font-extrabold text-xs">
+                Ayat ke-${ayah.numberInSurah}
+              </span>
+              <div class="flex items-center gap-2">
+                <button
+                  onclick="playMurojaahAyah(${idx})"
+                  class="px-3.5 py-2 rounded-xl ${isPlaying ? 'bg-amber-500 text-white' : 'bg-sage-100 hover:bg-sage-200 text-sage-800'} font-bold text-xs flex items-center gap-1.5 transition"
+                >
+                  <span>${isPlaying ? '🔊 Sedang Diputar' : '▶️ Dengarkan'}</span>
+                </button>
+                <button
+                  onclick="jumpToArrangeSpecificAyah(${idx})"
+                  class="px-3.5 py-2 rounded-xl bg-cream-100 hover:bg-cream-200 text-sage-800 border border-sage-200 font-bold text-xs transition"
+                >
+                  🧩 Tes Susun Ayat Ini
+                </button>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-cream-50 border border-sage-100 text-right">
+              <p class="arabic-text text-2xl sm:text-3xl font-bold text-sage-900 transition-all duration-300 ${murojaahState.hideText ? 'blur-md select-none opacity-30' : ''}">
+                ${ayah.text}
+              </p>
+              ${murojaahState.hideText ? `<p class="text-center text-xs font-bold text-sage-500 mt-1" dir="ltr">Teks disembunyikan untuk murojaah hafalan</p>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function playMurojaahAyah(index) {
+      const ayah = murojaahState.ayahs[index];
+      if (!ayah || !ayah.audio) return;
+
+      const player = document.getElementById('quranAudioPlayer');
+      murojaahState.playingAyahIndex = index;
+      renderMurojaahList();
+
+      player.src = ayah.audio;
+      player.currentTime = 0;
+      player.play().catch(() => {});
+
+      player.onended = () => {
+        if (murojaahState.autoLoop) {
+          // Ulangi ayat yang sama secara otomatis
+          player.currentTime = 0;
+          player.play().catch(() => {});
+        } else {
+          murojaahState.playingAyahIndex = -1;
+          renderMurojaahList();
+        }
+      };
+    }
+
+    function toggleMurojaahHideText() {
+      playSfx('click');
+      murojaahState.hideText = !murojaahState.hideText;
+      document.getElementById('murojaahEyeIcon').textContent = murojaahState.hideText ? '👁️' : '🙈';
+      document.getElementById('murojaahToggleTextLabel').textContent = murojaahState.hideText
+        ? 'Tampilkan Teks Ayat'
+        : 'Sembunyikan Teks Ayat';
+      renderMurojaahList();
+    }
+
+    function toggleMurojaahAutoLoop() {
+      playSfx('click');
+      murojaahState.autoLoop = !murojaahState.autoLoop;
+      document.getElementById('murojaahLoopLabel').textContent = `Pengulangan Otomatis: ${murojaahState.autoLoop ? 'AKTIF' : 'MATI'}`;
+    }
+
+    function playCurrentMurojaahAsGame() {
+      startSurahGame(murojaahState.surahNumber);
+    }
+
+    async function jumpToArrangeSpecificAyah(ayahIndex) {
+      await startSurahGame(murojaahState.surahNumber);
+      if (gameState.ayahs[ayahIndex]) {
+        setupAyahTurn(ayahIndex);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * 11. DASHBOARD HASIL BELAJAR
+     * ============================================================================
+     */
+    function renderDashboard() {
+      document.getElementById('dashPlayerName').textContent = appState.playerName;
+      const stats = calculateGlobalStats();
+
+      document.getElementById('dashCompletedSurahs').textContent = `${stats.completedSurahs} / 37`;
+      document.getElementById('dashTotalAyahs').textContent = stats.totalAyahsArranged;
+      document.getElementById('dashTotalStars').textContent = stats.totalStars;
+      document.getElementById('dashPercentage').textContent = `${stats.percentage}%`;
+
+      // Daftar Skor Surat
+      const scoresList = document.getElementById('dashSurahScoresList');
+      scoresList.innerHTML = JUZ_30_SURAHS.map((s, idx) => {
+        const prog = appState.surahProgress[s.number] || { status: 'unstarted', bestScore: 0, stars: 0 };
+        const statusText = prog.status === 'completed'
+          ? 'Selesai'
+          : prog.status === 'in_progress'
+            ? 'Dipelajari'
+            : 'Belum';
+
+        return `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-cream-50 border border-sage-100">
+            <div>
+              <span class="font-bold text-sage-900 text-sm">${idx + 1}. ${s.latin}</span>
+              <span class="text-xs text-sage-500 ml-1.5">(${statusText})</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-extrabold text-sage-700">${prog.bestScore || 0} Poin</span>
+              <span class="text-xs">${'⭐'.repeat(prog.stars || 0) || '—'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Riwayat Permainan
+      const historyList = document.getElementById('dashHistoryList');
+      if (appState.history.length === 0) {
+        historyList.innerHTML = `
+          <div class="text-center py-10 text-sage-500">
+            <p class="text-3xl mb-2">🌱</p>
+            <p class="font-bold text-sm">Belum ada riwayat permainan.</p>
+            <p class="text-xs mt-1">Ayo mulai menyusun ayat pertamamu!</p>
+          </div>
+        `;
+      } else {
+        historyList.innerHTML = appState.history.map(h => `
+          <div class="p-3.5 rounded-2xl bg-sage-50/70 border border-sage-200 flex items-center justify-between">
+            <div>
+              <h4 class="font-extrabold text-sage-900 text-sm">Surat ${h.surahName}</h4>
+              <p class="text-[11px] text-sage-600">${h.date} • ${h.ayahsCount} Ayat • Waktu ${h.duration}</p>
+            </div>
+            <div class="text-right">
+              <span class="block font-extrabold text-sage-800 text-sm">${h.score} Poin</span>
+              <span class="text-xs">${'⭐'.repeat(h.stars)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openResetProgressModal() {
+      openCustomModal(
+        '⚠️',
+        'Reset Semua Data Belajar?',
+        'Seluruh bintang, skor surat, dan riwayat permainan akan dihapus dari perangkat ini. Lanjutkan?',
+        () => {
+          appState.surahProgress = {};
+          appState.history = [];
+          saveAppState();
+          updateHomeUI();
+          renderDashboard();
+        }
+      );
+    }
+
+    /**
+     * ============================================================================
+     * 12. MODAL KUSTOM (PENGGANTI ALERT / CONFIRM)
+     * ============================================================================
+     */
+    let pendingModalAction = null;
+
+    function openCustomModal(icon, title, message, onConfirm) {
+      document.getElementById('customModalIcon').textContent = icon;
+      document.getElementById('customModalTitle').textContent = title;
+      document.getElementById('customModalMessage').textContent = message;
+      pendingModalAction = onConfirm;
+
+      const confirmBtn = document.getElementById('customModalConfirmBtn');
+      confirmBtn.onclick = () => {
+        closeCustomModal();
+        if (typeof pendingModalAction === 'function') pendingModalAction();
+      };
+
+      document.getElementById('customModalBackdrop').classList.remove('hidden');
+    }
+
+    function closeCustomModal() {
+      document.getElementById('customModalBackdrop').classList.add('hidden');
+      pendingModalAction = null;
+    }
+
+    /**
+     * ============================================================================
+     * INISIALISASI SAAT HALAMAN DIMUAT
+     * ============================================================================
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAppState();
+      updateHomeUI();
+      renderSurahGrid();
+    });
+  </script>
+</body>
+</html>
